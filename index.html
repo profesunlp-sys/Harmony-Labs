@@ -3,211 +3,217 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Armonizador Vocal Pro v6 (Realista)</title>
+  <title>Armonizador Vocal Pro v7 (Ultra Realista)</title>
   <style>
+    :root {
+      --primary: #4a90e2;
+      --danger: #e74c3c;
+      --success: #2ecc71;
+      --dark-bg: rgba(20, 20, 40, 0.9);
+      --card-bg: rgba(30, 30, 60, 0.85);
+      --text: #ffffff;
+    }
     body { 
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      font-family: 'Segoe UI', system-ui, sans-serif; 
       text-align: center; 
-      padding: 15px; 
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-      color: white;
+      padding: 20px 10px; 
+      background: radial-gradient(circle at top, #2b32b2, #1488cc);
+      color: var(--text);
       margin: 0;
       min-height: 100vh;
     }
+    
+    /* Header & Main Controls */
     h2 { 
-      margin-bottom: 8px; 
+      margin: 0 0 15px 0; 
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-      font-size: 2.2em;
+      font-size: 2.4em;
+      letter-spacing: -0.5px;
     }
-    .small { 
-      font-size: 1.1em; 
-      color: #e0e0ff; 
-      margin-top: 0; 
-      opacity: 0.9;
+    .main-controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 25px;
+      padding: 15px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 16px;
+      backdrop-filter: blur(5px);
     }
+    
+    /* Buttons */
     button {
       font-size: 1.1em; 
-      padding: 12px 20px; 
-      margin: 8px;
-      border-radius: 10px; 
+      font-weight: 600;
+      padding: 14px 24px; 
+      border-radius: 12px; 
       border: none; 
-      background: linear-gradient(to bottom, #4a90e2, #357abd);
-      color: white;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      transition: all 0.2s;
-      min-width: 180px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 160px;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     button:hover:not(:disabled) { 
       transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
-      background: linear-gradient(to bottom, #5a9cec, #4580cd);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      filter: brightness(1.1);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(0);
     }
     button:disabled { 
-      opacity: 0.5; 
+      opacity: 0.4; 
       cursor: not-allowed; 
       transform: none;
     }
-    .danger { 
-      background: linear-gradient(to bottom, #e74c3c, #c0392b); 
-    }
-    .danger:hover:not(:disabled) { 
-      background: linear-gradient(to bottom, #f0544f, #d94337); 
-    }
-    .success {
-      background: linear-gradient(to bottom, #2ecc71, #27ae60);
-    }
-    .success:hover:not(:disabled) {
-      background: linear-gradient(to bottom, #34d176, #2db969);
-    }
-    select, input[type=range] { 
-      font-size: 1.1em; 
-      padding: 8px; 
-      margin: 6px; 
-      border-radius: 6px;
-      border: 1px solid #555;
-      background: rgba(255,255,255,0.9);
-      color: #333;
+    
+    .btn-record { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .btn-stop-rec { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
+    .btn-play { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .btn-harmony { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+    .btn-danger { background: linear-gradient(135deg, #c0392b, #a93226); }
+
+    /* Cards & Inputs */
+    .card {
+      background: var(--card-bg); 
+      border: 1px solid rgba(255,255,255,0.1); 
+      border-radius: 16px;
+      padding: 20px; 
+      margin: 15px auto; 
+      max-width: 900px; 
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
     }
     .control-group {
-      margin: 12px auto; 
-      max-width: 900px; 
+      margin: 12px 0; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
       flex-wrap: wrap;
       gap: 10px;
-      padding: 8px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 10px;
     }
     label { 
-      width: 200px; 
+      min-width: 180px; 
       text-align: right; 
       margin-right: 12px; 
       font-weight: 500;
-      color: #f0f0ff;
+      color: #ddd;
     }
+    select, input[type=range] { 
+      font-size: 1em; 
+      padding: 8px; 
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      outline: none;
+    }
+    input[type=range] {
+      padding: 0;
+      height: 6px;
+      width: 200px;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
     .value-tag { 
-      min-width: 100px; 
-      display: inline-block; 
+      min-width: 90px; 
       text-align: left; 
-      color: #ffffff; 
-      font-weight: 600; 
-      background: rgba(0,0,0,0.3);
-      padding: 4px 8px;
-      border-radius: 4px;
+      color: #4fc3f7; 
+      font-weight: 700; 
+      font-family: monospace;
+      font-size: 1.1em;
     }
-    .card {
-      background: rgba(25, 25, 60, 0.85); 
-      border: 1px solid #444; 
-      border-radius: 16px;
-      padding: 16px; 
-      margin: 15px auto; 
-      max-width: 960px; 
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
-    }
+
+    /* Status & Info */
     #status { 
       font-size: 1.2em; 
-      margin: 15px; 
-      color: #ecf0f1; 
-      min-height: 28px;
-      padding: 10px;
+      margin: 15px 0; 
+      padding: 12px;
       background: rgba(0,0,0,0.3);
       border-radius: 8px;
-    }
-    #ratioDisplay { 
-      font-size: 1.1em; 
-      color: #9b59b6; 
       min-height: 24px;
-      margin: 10px 0;
-      padding: 8px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 6px;
     }
     #errorMsg { 
-      color: #e74c3c; 
-      min-height: 26px; 
+      color: #ff8a80; 
       font-weight: 600; 
-      font-size: 1.1em;
-      padding: 10px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 6px;
-      margin: 10px 0;
+      min-height: 24px; 
+      margin-top: 10px;
     }
-    .two-cols { 
-      display: flex; 
-      gap: 16px; 
-      justify-content: center; 
-      flex-wrap: wrap; 
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
     }
-    .mini {
-      border: 1px solid #555; 
-      border-radius: 12px; 
-      padding: 12px 16px; 
-      min-width: 320px; 
-      background: rgba(0, 0, 0, 0.4);
+    .info-box {
+      background: rgba(0,0,0,0.2);
+      padding: 12px;
+      border-radius: 8px;
       text-align: left;
     }
-    .mini h4 { 
-      margin: 8px 0 6px; 
-      font-size: 1.1em; 
-      color: #bdc3c7; 
-      border-bottom: 1px solid #555;
-      padding-bottom: 4px;
+    .info-box h4 {
+      margin: 0 0 8px 0;
+      color: #aaa;
+      font-size: 0.9em;
+      text-transform: uppercase;
     }
-    .mono { 
-      font-family: ui-monospace, SFMono-Regular, 'Courier New', monospace; 
-      font-size: 1.0em; 
-      color: #ecf0f1; 
-      word-break: break-all;
+    .mono {
+      font-family: 'Courier New', monospace;
+      color: #fff;
+      font-size: 0.95em;
       line-height: 1.4;
     }
-    .rec-indicator {
+    
+    /* Animations */
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+    }
+    .recording-indicator {
       display: inline-block;
-      width: 16px;
-      height: 16px;
-      background-color: #e74c3c;
+      width: 12px;
+      height: 12px;
+      background: #e74c3c;
       border-radius: 50%;
       margin-right: 8px;
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.4; }
-      100% { opacity: 1; }
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.85em;
-      font-weight: bold;
-      margin: 2px;
-    }
-    .badge-ready { background: #2ecc71; color: white; }
-    .badge-recording { background: #e74c3c; color: white; }
-    .badge-playing { background: #3498db; color: white; }
-    .header-badge {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.6);
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 0.9em;
+      animation: pulse-red 1.5s infinite;
     }
   </style>
 </head>
 <body>
-  <div class="header-badge">
-    <span class="badge badge-ready">PRO v6</span>
-  </div>
-  
-  <h2>🎵 Armonizador Vocal Pro v6</h2>
-  <p class="small">Voces ultra-realistas con detune, humanización & formantes</p>
 
+  <!-- HEADER & MAIN CONTROLS (TOP PRIORITY) -->
+  <h2>🎵 Armonizador Vocal Pro v7</h2>
+  <p style="margin-top:-10px; opacity:0.8; margin-bottom:20px;">Calidad Ultra-Realista • Graves Profundos • Agudos Cristalinos</p>
+
+  <div class="main-controls">
+    <button id="recordBtn" class="btn-record">🎤 Grabar Voz</button>
+    <button id="stopRecordBtn" class="btn-stop-rec" disabled>⏹ Detener</button>
+    <button id="playBtn" class="btn-play" disabled>🔊 Mezcla Final</button>
+    <button id="playHarmonyOnlyBtn" class="btn-harmony" disabled>🎵 Solo Armonías</button>
+    <button id="stopAllBtn" class="btn-danger">⏹ STOP TODO</button>
+  </div>
+
+  <div id="status">Listo para grabar. Configura tus ajustes abajo.</div>
+  <div id="errorMsg"></div>
+
+  <!-- CONFIGURATION CARDS -->
   <div class="card">
     <div class="control-group">
       <label for="modeSelect">Modo de Armonía:</label>
@@ -216,6 +222,7 @@
         <option value="dual_wide">Dual Amplio (+4 / -4 st)</option>
         <option value="triple_chorus">Coro Triple (+3 / -3 / +7 st)</option>
         <option value="parallel_fifths">Quintas Paralelas (+7 / -5 st)</option>
+        <option value="octave_harmony">Octavas Mágicas (+12 / -12 st)</option>
         <option value="single_manual">Simple Manual</option>
       </select>
     </div>
@@ -236,138 +243,122 @@
     </div>
 
     <div class="control-group">
-      <label for="falsettoSelect">Falsete (octavas):</label>
+      <label for="falsettoSelect">Modo Falsete:</label>
       <select id="falsettoSelect">
-        <option value="off" selected>Off</option>
-        <option value="on">On</option>
+        <option value="off" selected>Normal (Voz Pecho)</option>
+        <option value="on">Falsete (Voz Cabeza)</option>
       </select>
     </div>
   </div>
 
   <div class="card">
     <div class="control-group">
-      <label for="volOriginal">Vol. Original:</label>
+      <label for="volOriginal">Volumen Original:</label>
       <input type="range" id="volOriginal" min="0" max="200" value="100" step="1" />
       <span id="volOrigLabel" class="value-tag">100%</span>
     </div>
 
     <div class="control-group">
-      <label for="volUpper">Vol. Armonía +:</label>
-      <input type="range" id="volUpper" min="0" max="150" value="58" step="1" />
-      <span id="volUpperLabel" class="value-tag">58%</span>
+      <label for="volUpper">Volumen Armonía +:</label>
+      <input type="range" id="volUpper" min="0" max="150" value="65" step="1" />
+      <span id="volUpperLabel" class="value-tag">65%</span>
     </div>
 
     <div class="control-group">
-      <label for="volLower">Vol. Armonía -:</label>
-      <input type="range" id="volLower" min="0" max="150" value="52" step="1" />
-      <span id="volLowerLabel" class="value-tag">52%</span>
+      <label for="volLower">Volumen Armonía -:</label>
+      <input type="range" id="volLower" min="0" max="150" value="60" step="1" />
+      <span id="volLowerLabel" class="value-tag">60%</span>
     </div>
 
     <div class="control-group">
-      <label for="volExtra">Vol. Extra (si aplica):</label>
-      <input type="range" id="volExtra" min="0" max="150" value="45" step="1" />
-      <span id="volExtraLabel" class="value-tag">45%</span>
+      <label for="volExtra">Volumen Extra:</label>
+      <input type="range" id="volExtra" min="0" max="150" value="50" step="1" />
+      <span id="volExtraLabel" class="value-tag">50%</span>
     </div>
   </div>
 
   <div class="card">
     <div class="control-group">
-      <label for="toneCutoff">Brillo/Timbre:</label>
-      <input type="range" id="toneCutoff" min="2200" max="8000" value="3800" step="100" />
-      <span id="toneCutoffLabel" class="value-tag">3800 Hz</span>
+      <label for="toneCutoff">Brillo (Agudos):</label>
+      <input type="range" id="toneCutoff" min="3000" max="12000" value="8000" step="500" />
+      <span id="toneCutoffLabel" class="value-tag">8000 Hz</span>
     </div>
 
     <div class="control-group">
-      <label for="formantShift">Formante Shift:</label>
-      <input type="range" id="formantShift" min="-1200" max="1200" value="0" step="50" />
-      <span id="formantShiftLabel" class="value-tag">0 cents</span>
+      <label for="bassBoost">Potencia Graves:</label>
+      <input type="range" id="bassBoost" min="0" max="20" value="12" step="1" />
+      <span id="bassBoostLabel" class="value-tag">+12 dB</span>
     </div>
 
     <div class="control-group">
-      <label for="detuneCents">Detune Natural:</label>
-      <input type="range" id="detuneCents" min="0" max="30" value="8" step="1" />
-      <span id="detuneCentsLabel" class="value-tag">8 cents</span>
+      <label for="detuneCents">Humanizar (Detune):</label>
+      <input type="range" id="detuneCents" min="0" max="40" value="12" step="1" />
+      <span id="detuneCentsLabel" class="value-tag">±12 cents</span>
     </div>
 
     <div class="control-group">
-      <label for="humanizeMs">Humanizar (ms):</label>
-      <input type="range" id="humanizeMs" min="0" max="60" value="25" step="1" />
-      <span id="humanizeMsLabel" class="value-tag">25 ms</span>
+      <label for="humanizeMs">Retraso Natural:</label>
+      <input type="range" id="humanizeMs" min="0" max="80" value="35" step="1" />
+      <span id="humanizeMsLabel" class="value-tag">35 ms</span>
     </div>
 
     <div class="control-group">
       <label for="chorusDepth">Profundidad Coro:</label>
-      <input type="range" id="chorusDepth" min="0" max="100" value="42" step="1" />
-      <span id="chorusDepthLabel" class="value-tag">42%</span>
+      <input type="range" id="chorusDepth" min="0" max="100" value="45" step="1" />
+      <span id="chorusDepthLabel" class="value-tag">45%</span>
     </div>
   </div>
 
-  <div class="card two-cols">
-    <div class="mini">
-      <h4>.Intervalos Elegidos (Última Reproducción)</h4>
+  <div class="info-grid">
+    <div class="info-box">
+      <h4>Intervalos Activos</h4>
       <div id="pickedIntervals" class="mono">—</div>
     </div>
-    <div class="mini">
-      <h4>Estado del Motor</h4>
-      <div id="engineInfo" class="mono">Listo • Modo: Dual Natural</div>
+    <div class="info-box">
+      <h4>Estado del Motor DSP</h4>
+      <div id="engineInfo" class="mono">Esperando...<br><span style="color:#666;font-size:0.8em">v7.0 Ultra-Realistic Engine</span></div>
     </div>
   </div>
 
-  <div class="card">
-    <button id="recordBtn">🎤 Grabar Voz</button>
-    <button id="stopRecordBtn" disabled>⏹ Detener Grabación</button>
-    <button id="playBtn" disabled>🔊 Reproducir Mezcla</button>
-    <button id="playHarmonyOnlyBtn" disabled>🎵 Solo Armonías</button>
-    <button id="stopAllBtn" class="danger">⏹ STOP TODO</button>
-
-    <div id="status">Listo para grabar • Asegúrese de permitir acceso al micrófono</div>
-    <div id="ratioDisplay"></div>
-    <div id="errorMsg"></div>
-  </div>
-
+  <!-- SOUNDTOUCH JS ENGINE -->
   <script>
-    // SoundTouchJS v0.1.30 – con export eliminado para scope global
     class FifoSampleBuffer{constructor(){this._vector=new Float32Array,this._position=0,this._frameCount=0}get vector(){return this._vector}get position(){return this._position}get startIndex(){return 2*this._position}get frameCount(){return this._frameCount}get endIndex(){return 2*(this._position+this._frameCount)}clear(){this.receive(this._frameCount),this.rewind()}put(t){this._frameCount+=t}putSamples(t,e,i=0){const s=2*(e=e||0);i>=0||(i=(t.length-s)/2);const r=2*i;this.ensureCapacity(i+this._frameCount);const o=this.endIndex;this.vector.set(t.subarray(s,s+r),o),this._frameCount+=i}putBuffer(t,e,i=0){e=e||0,i>=0||(i=t.frameCount-e),this.putSamples(t.vector,t.position+e,i)}receive(t){t>=0&&!(t>this._frameCount)||(t=this.frameCount),this._frameCount-=t,this._position+=t}receiveSamples(t,e=0){const i=2*e,s=this.startIndex;t.set(this._vector.subarray(s,s+i)),this.receive(e)}extract(t,e=0,i=0){const s=this.startIndex+2*e,r=2*i;t.set(this._vector.subarray(s,s+r))}ensureCapacity(t=0){const e=parseInt(2*t);if(this._vector.length<e){const t=new Float32Array(e);t.set(this._vector.subarray(this.startIndex,this.endIndex)),this._vector=t,this._position=0}else this.rewind()}ensureAdditionalCapacity(t=0){this.ensureCapacity(this._frameCount+t)}rewind(){this._position>0&&(this._vector.set(this._vector.subarray(this.startIndex,this.endIndex)),this._position=0)}}class AbstractFifoSamplePipe{constructor(t){t?(this._inputBuffer=new FifoSampleBuffer,this._outputBuffer=new FifoSampleBuffer):this._inputBuffer=this._outputBuffer=null}get inputBuffer(){return this._inputBuffer}set inputBuffer(t){this._inputBuffer=t}get outputBuffer(){return this._outputBuffer}set outputBuffer(t){this._outputBuffer=t}clear(){this._inputBuffer.clear(),this._outputBuffer.clear()}}class RateTransposer extends AbstractFifoSamplePipe{constructor(t){super(t),this.reset(),this._rate=1}set rate(t){this._rate=t}reset(){this.slopeCount=0,this.prevSampleL=0,this.prevSampleR=0}clone(){const t=new RateTransposer;return t.rate=this._rate,t}process(){const t=this._inputBuffer.frameCount;this._outputBuffer.ensureAdditionalCapacity(t/this._rate+1);const e=this.transpose(t);this._inputBuffer.receive(),this._outputBuffer.put(e)}transpose(t=0){if(0===t)return 0;const e=this._inputBuffer.vector,i=this._inputBuffer.startIndex,s=this._outputBuffer.vector,r=this._outputBuffer.endIndex;let o=0,u=0;for(;this.slopeCount<1;)s[r+2*u]=(1-this.slopeCount)*this.prevSampleL+this.slopeCount*e[i],s[r+2*u+1]=(1-this.slopeCount)*this.prevSampleR+this.slopeCount*e[i+1],u+=1,this.slopeCount+=this._rate;if(this.slopeCount-=1,1!==t)t:for(;;){for(;this.slopeCount>1;)if(this.slopeCount-=1,o+=1,o>=t-1)break t;const h=i+2*o;s[r+2*u]=(1-this.slopeCount)*e[h]+this.slopeCount*e[h+2],s[r+2*u+1]=(1-this.slopeCount)*e[h+1]+this.slopeCount*e[h+3],u+=1,this.slopeCount+=this._rate}return this.prevSampleL=e[i+2*t-2],this.prevSampleR=e[i+2*t-1],u}}class FilterSupport{constructor(t){this._pipe=t}get pipe(){return this._pipe}get inputBuffer(){return this._pipe.inputBuffer}get outputBuffer(){return this._pipe.outputBuffer}fillInputBuffer(){throw new Error("fillInputBuffer() not overridden")}fillOutputBuffer(t=0){for(;this.outputBuffer.frameCount<t;){const t=16384-this.inputBuffer.frameCount;if(this.fillInputBuffer(t),this.inputBuffer.frameCount<16384)break;this._pipe.process()}}clear(){this._pipe.clear()}}const noop=function(){};class SimpleFilter extends FilterSupport{constructor(t,e,i=noop){super(e),this.callback=i,this.sourceSound=t,this.historyBufferSize=22050,this._sourcePosition=0,this.outputBufferPosition=0,this._position=0}get position(){return this._position}set position(t){if(t>this._position)throw new RangeError("New position may not be greater than current position");const e=this.outputBufferPosition-(this._position-t);if(e<0)throw new RangeError("New position falls outside of history buffer");this.outputBufferPosition=e,this._position=t}get sourcePosition(){return this._sourcePosition}set sourcePosition(t){this.clear(),this._sourcePosition=t}onEnd(){this.callback()}fillInputBuffer(t=0){const e=new Float32Array(2*t),i=this.sourceSound.extract(e,t,this._sourcePosition);this._sourcePosition+=i,this.inputBuffer.putSamples(e,0,i)}extract(t,e=0){this.fillOutputBuffer(this.outputBufferPosition+e);const i=Math.min(e,this.outputBuffer.frameCount-this.outputBufferPosition);this.outputBuffer.extract(t,this.outputBufferPosition,i);const s=this.outputBufferPosition+i;return this.outputBufferPosition=Math.min(this.historyBufferSize,s),this.outputBuffer.receive(Math.max(s-this.historyBufferSize,0)),this._position+=i,i}handleSampleData(t){this.extract(t.data,4096)}clear(){super.clear(),this.outputBufferPosition=0}}const USE_AUTO_SEQUENCE_LEN=0,DEFAULT_SEQUENCE_MS=0,USE_AUTO_SEEKWINDOW_LEN=0,DEFAULT_SEEKWINDOW_MS=0,DEFAULT_OVERLAP_MS=8,_SCAN_OFFSETS=[[124,186,248,310,372,434,496,558,620,682,744,806,868,930,992,1054,1116,1178,1240,1302,1364,1426,1488,0],[-100,-75,-50,-25,25,50,75,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-20,-15,-10,-5,5,10,15,20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-4,-3,-2,-1,1,2,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],AUTOSEQ_TEMPO_LOW=.5,AUTOSEQ_TEMPO_TOP=2,AUTOSEQ_AT_MIN=125,AUTOSEQ_AT_MAX=50,AUTOSEQ_K=-50,AUTOSEQ_C=150,AUTOSEEK_AT_MIN=25,AUTOSEEK_AT_MAX=15,AUTOSEEK_K=-10/1.5,AUTOSEEK_C=25-.5*AUTOSEEK_K;class Stretch extends AbstractFifoSamplePipe{constructor(t){super(t),this._quickSeek=!0,this.midBufferDirty=!1,this.midBuffer=null,this.overlapLength=0,this.autoSeqSetting=!0,this.autoSeekSetting=!0,this._tempo=1,this.setParameters(44100,0,0,8)}clear(){super.clear(),this.clearMidBuffer()}clearMidBuffer(){this.midBufferDirty&&(this.midBufferDirty=!1,this.midBuffer=null)}setParameters(t,e,i,s){t>0&&(this.sampleRate=t),s>0&&(this.overlapMs=s),e>0?(this.sequenceMs=e,this.autoSeqSetting=!1):this.autoSeqSetting=!0,i>0?(this.seekWindowMs=i,this.autoSeekSetting=!1):this.autoSeekSetting=!0,this.calculateSequenceParameters(),this.calculateOverlapLength(this.overlapMs),this.tempo=this._tempo}set tempo(t){let e;this._tempo=t,this.calculateSequenceParameters(),this.nominalSkip=this._tempo*(this.seekWindowLength-this.overlapLength),this.skipFract=0,e=Math.floor(this.nominalSkip+.5),this.sampleReq=Math.max(e+this.overlapLength,this.seekWindowLength)+this.seekLength}get tempo(){return this._tempo}get inputChunkSize(){return this.sampleReq}get outputChunkSize(){return this.overlapLength+Math.max(0,this.seekWindowLength-2*this.overlapLength)}calculateOverlapLength(t=0){let e;e=this.sampleRate*t/1e3,e=e<16?16:e,e-=e%8,this.overlapLength=e,this.refMidBuffer=new Float32Array(2*this.overlapLength),this.midBuffer=new Float32Array(2*this.overlapLength)}checkLimits(t,e,i){return t<e?e:t>i?i:t}calculateSequenceParameters(){let t,e;this.autoSeqSetting&&(t=150+-50*this._tempo,t=this.checkLimits(t,50,125),this.sequenceMs=Math.floor(t+.5)),this.autoSeekSetting&&(e=AUTOSEEK_C+AUTOSEEK_K*this._tempo,e=this.checkLimits(e,15,25),this.seekWindowMs=Math.floor(e+.5)),this.seekWindowLength=Math.floor(this.sampleRate*this.sequenceMs/1e3),this.seekLength=Math.floor(this.sampleRate*this.seekWindowMs/1e3)}set quickSeek(t){this._quickSeek=t}clone(){const t=new Stretch;return t.tempo=this._tempo,t.setParameters(this.sampleRate,this.sequenceMs,this.seekWindowMs,this.overlapMs),t}seekBestOverlapPosition(){return this._quickSeek?this.seekBestOverlapPositionStereoQuick():this.seekBestOverlapPositionStereo()}seekBestOverlapPositionStereo(){let t,e,i,s=0;for(this.preCalculateCorrelationReferenceStereo(),t=0,e=Number.MIN_VALUE;s<this.seekLength;s+=1)i=this.calculateCrossCorrelationStereo(2*s,this.refMidBuffer),i>e&&(e=i,t=s);return t}seekBestOverlapPositionStereoQuick(){let t,e,i,s,r,o=0;for(this.preCalculateCorrelationReferenceStereo(),e=Number.MIN_VALUE,t=0,s=0,r=0;o<4;o+=1){let u=0;for(;_SCAN_OFFSETS[o][u]&&(r=s+_SCAN_OFFSETS[o][u],!(r>=this.seekLength));)i=this.calculateCrossCorrelationStereo(2*r,this.refMidBuffer),i>e&&(e=i,t=r),u+=1;s=t}return t}preCalculateCorrelationReferenceStereo(){let t,e,i=0;for(;i<this.overlapLength;i+=1)e=i*(this.overlapLength-i),t=2*i,this.refMidBuffer[t]=this.midBuffer[t]*e,this.refMidBuffer[t+1]=this.midBuffer[t+1]*e}calculateCrossCorrelationStereo(t,e){const i=this._inputBuffer.vector;t+=this._inputBuffer.startIndex;let s=0,r=2;const o=2*this.overlapLength;let u;for(;r<o;r+=2)u=r+t,s+=i[u]*e[r]+i[u+1]*e[r+1];return s}overlap(t){this.overlapStereo(2*t)}overlapStereo(t){const e=this._inputBuffer.vector;t+=this._inputBuffer.startIndex;const i=this._outputBuffer.vector,s=this._outputBuffer.endIndex;let r,o,u=0;const h=1/this.overlapLength;let n,a,f;for(;u<this.overlapLength;u+=1)o=(this.overlapLength-u)*h,n=u*h,r=2*u,a=r+t,f=r+s,i[f+0]=e[a+0]*n+this.midBuffer[r+0]*o,i[f+1]=e[a+1]*n+this.midBuffer[r+1]*o}process(){let t,e,i;if(null===this.midBuffer){if(this._inputBuffer.frameCount<this.overlapLength)return;this.midBuffer=new Float32Array(2*this.overlapLength),this._inputBuffer.receiveSamples(this.midBuffer,this.overlapLength)}for(;this._inputBuffer.frameCount>=this.sampleReq;){t=this.seekBestOverlapPosition(),this._outputBuffer.ensureAdditionalCapacity(this.overlapLength),this.overlap(Math.floor(t)),this._outputBuffer.put(this.overlapLength),e=this.seekWindowLength-2*this.overlapLength,e>0&&this._outputBuffer.putBuffer(this._inputBuffer,t+this.overlapLength,e);const s=this._inputBuffer.startIndex+2*(t+this.seekWindowLength-this.overlapLength);this.midBuffer.set(this._inputBuffer.vector.subarray(s,s+2*this.overlapLength)),this.skipFract+=this.nominalSkip,i=Math.floor(this.skipFract),this.skipFract-=i,this._inputBuffer.receive(i)}}}const testFloatEqual=function(t,e){return(t>e?t-e:e-t)>1e-10};class SoundTouch{constructor(){this.transposer=new RateTransposer(!1),this.stretch=new Stretch(!1),this._inputBuffer=new FifoSampleBuffer,this._intermediateBuffer=new FifoSampleBuffer,this._outputBuffer=new FifoSampleBuffer,this._rate=0,this._tempo=0,this.virtualPitch=1,this.virtualRate=1,this.virtualTempo=1,this.calculateEffectiveRateAndTempo()}clear(){this.transposer.clear(),this.stretch.clear()}clone(){const t=new SoundTouch;return t.rate=this.rate,t.tempo=this.tempo,t}get rate(){return this._rate}set rate(t){this.virtualRate=t,this.calculateEffectiveRateAndTempo()}set rateChange(t){this._rate=1+.01*t}get tempo(){return this._tempo}set tempo(t){this.virtualTempo=t,this.calculateEffectiveRateAndTempo()}set tempoChange(t){this.tempo=1+.01*t}set pitch(t){this.virtualPitch=t,this.calculateEffectiveRateAndTempo()}set pitchOctaves(t){this.pitch=Math.exp(.69314718056*t),this.calculateEffectiveRateAndTempo()}set pitchSemitones(t){this.pitchOctaves=t/12}get inputBuffer(){return this._inputBuffer}get outputBuffer(){return this._outputBuffer}calculateEffectiveRateAndTempo(){const t=this._tempo,e=this._rate;this._tempo=this.virtualTempo/this.virtualPitch,this._rate=this.virtualRate*this.virtualPitch,testFloatEqual(this._tempo,t)&&(this.stretch.tempo=this._tempo),testFloatEqual(this._rate,e)&&(this.transposer.rate=this._rate),this._rate>1?this._outputBuffer!=this.transposer.outputBuffer&&(this.stretch.inputBuffer=this._inputBuffer,this.stretch.outputBuffer=this._intermediateBuffer,this.transposer.inputBuffer=this._intermediateBuffer,this.transposer.outputBuffer=this._outputBuffer):this._outputBuffer!=this.stretch.outputBuffer&&(this.transposer.inputBuffer=this._inputBuffer,this.transposer.outputBuffer=this._intermediateBuffer,this.stretch.inputBuffer=this._intermediateBuffer,this.stretch.outputBuffer=this._outputBuffer)}process(){this._rate>1?(this.stretch.process(),this.transposer.process()):(this.transposer.process(),this.stretch.process())}}class WebAudioBufferSource{constructor(t){this.buffer=t,this._position=0}get dualChannel(){return this.buffer.numberOfChannels>1}get position(){return this._position}set position(t){this._position=t}extract(t,e=0,i=0){this.position=i;let s=this.buffer.getChannelData(0),r=this.dualChannel?this.buffer.getChannelData(1):this.buffer.getChannelData(0),o=0;for(;o<e;o++)t[2*o]=s[o+i],t[2*o+1]=r[o+i];return Math.min(e,s.length-i)}}const getWebAudioNode=function(t,e,i=noop,s=4096){const r=t.createScriptProcessor(s,2,2),o=new Float32Array(2*s);return r.onaudioprocess=t=>{let r=t.outputBuffer.getChannelData(0),u=t.outputBuffer.getChannelData(1),h=e.extract(o,s);i(e.sourcePosition),0===h&&e.onEnd();let n=0;for(;n<h;n++)r[n]=o[2*n],u[n]=o[2*n+1]},r},pad=function(t,e,i){return i=i||"0",(t+="").length>=e?t:new Array(e-t.length+1).join(i)+t},minsSecs=function(t){const e=Math.floor(t/60);return`${e}:${pad(parseInt(t-60*e),2)}`},onUpdate=function(t){const e=this.timePlayed,i=this.sampleRate;if(this.sourcePosition=t,this.timePlayed=t/i,e!==this.timePlayed){const t=new CustomEvent("play",{detail:{timePlayed:this.timePlayed,formattedTimePlayed:this.formattedTimePlayed,percentagePlayed:this.percentagePlayed}});this._node.dispatchEvent(t)}};class PitchShifter{constructor(t,e,i,s=noop){this._soundtouch=new SoundTouch;const r=new WebAudioBufferSource(e);this.timePlayed=0,this.sourcePosition=0,this._filter=new SimpleFilter(r,this._soundtouch,s),this._node=getWebAudioNode(t,this._filter,(t=>onUpdate.call(this,t)),i),this.tempo=1,this.rate=1,this.duration=e.duration,this.sampleRate=t.sampleRate,this.listeners=[]}get formattedDuration(){return minsSecs(this.duration)}get formattedTimePlayed(){return minsSecs(this.timePlayed)}get percentagePlayed(){return 100*this._filter.sourcePosition/(this.duration*this.sampleRate)}set percentagePlayed(t){this._filter.sourcePosition=parseInt(t*this.duration*this.sampleRate),this.sourcePosition=this._filter.sourcePosition,this.timePlayed=this.sourcePosition/this.sampleRate}get node(){return this._node}set pitch(t){this._soundtouch.pitch=t}set pitchSemitones(t){this._soundtouch.pitchSemitones=t}set rate(t){this._soundtouch.rate=t}set tempo(t){this._soundtouch.tempo=t}connect(t){this._node.connect(t)}disconnect(){this._node.disconnect()}on(t,e){this.listeners.push({name:t,cb:e}),this._node.addEventListener(t,(t=>e(t.detail)))}off(t=null){let e=this.listeners;t&&(e=e.filter((e=>e.name===t))),e.forEach((t=>{this._node.removeEventListener(t.name,(e=>t.cb(e.detail)))}))}}
   </script>
 
+  <!-- APP LOGIC -->
   <script>
-    // UI refs
-    const recordBtn = document.getElementById('recordBtn');
-    const stopRecordBtn = document.getElementById('stopRecordBtn');
-    const playBtn = document.getElementById('playBtn');
-    const playHarmonyOnlyBtn = document.getElementById('playHarmonyOnlyBtn');
-    const stopAllBtn = document.getElementById('stopAllBtn');
+    // UI Elements
+    const els = {
+      recordBtn: document.getElementById('recordBtn'),
+      stopRecordBtn: document.getElementById('stopRecordBtn'),
+      playBtn: document.getElementById('playBtn'),
+      playHarmonyOnlyBtn: document.getElementById('playHarmonyOnlyBtn'),
+      stopAllBtn: document.getElementById('stopAllBtn'),
+      modeSelect: document.getElementById('modeSelect'),
+      intervalSelect: document.getElementById('intervalSelect'),
+      singleIntervalGroup: document.getElementById('singleIntervalGroup'),
+      falsettoSelect: document.getElementById('falsettoSelect'),
+      status: document.getElementById('status'),
+      error: document.getElementById('errorMsg'),
+      picked: document.getElementById('pickedIntervals'),
+      engine: document.getElementById('engineInfo')
+    };
 
-    const modeSelect = document.getElementById('modeSelect');
-    const intervalSelect = document.getElementById('intervalSelect');
-    const singleIntervalGroup = document.getElementById('singleIntervalGroup');
-    const falsettoSelect = document.getElementById('falsettoSelect');
-
-    const volOriginal = document.getElementById('volOriginal');
-    const volUpper = document.getElementById('volUpper');
-    const volLower = document.getElementById('volLower');
-    const volExtra = document.getElementById('volExtra');
-    const toneCutoff = document.getElementById('toneCutoff');
-    const formantShift = document.getElementById('formantShift');
-    const detuneCents = document.getElementById('detuneCents');
-    const humanizeMs = document.getElementById('humanizeMs');
-    const chorusDepth = document.getElementById('chorusDepth');
-
-    const volOrigLabel = document.getElementById('volOrigLabel');
-    const volUpperLabel = document.getElementById('volUpperLabel');
-    const volLowerLabel = document.getElementById('volLowerLabel');
-    const volExtraLabel = document.getElementById('volExtraLabel');
-    const toneCutoffLabel = document.getElementById('toneCutoffLabel');
-    const formantShiftLabel = document.getElementById('formantShiftLabel');
-    const detuneCentsLabel = document.getElementById('detuneCentsLabel');
-    const humanizeMsLabel = document.getElementById('humanizeMsLabel');
-    const chorusDepthLabel = document.getElementById('chorusDepthLabel');
-
-    const statusDiv = document.getElementById('status');
-    const ratioDisplay = document.getElementById('ratioDisplay');
-    const errorMsg = document.getElementById('errorMsg');
-    const pickedIntervalsDiv = document.getElementById('pickedIntervals');
-    const engineInfoDiv = document.getElementById('engineInfo');
+    // Inputs & Labels
+    const inputs = ['volOriginal', 'volUpper', 'volLower', 'volExtra', 'toneCutoff', 'bassBoost', 'detuneCents', 'humanizeMs', 'chorusDepth'];
+    const labels = {};
+    inputs.forEach(id => {
+      const el = document.getElementById(id);
+      const lbl = document.getElementById(id + 'Label');
+      labels[id] = lbl;
+      el.oninput = () => {
+        let suffix = '%';
+        if(id === 'toneCutoff') suffix = ' Hz';
+        if(id === 'detuneCents' || id === 'bassBoost') suffix = id === 'bassBoost' ? ' dB' : ' cents';
+        if(id === 'humanizeMs') suffix = ' ms';
+        lbl.textContent = el.value + suffix;
+      };
+    });
 
     // State
     let mediaRecorder = null;
@@ -376,32 +367,15 @@
     let originalBuffer = null;
     let activeSources = [];
 
-    function updateLabels() {
-      volOrigLabel.textContent = `${volOriginal.value}%`;
-      volUpperLabel.textContent = `${volUpper.value}%`;
-      volLowerLabel.textContent = `${volLower.value}%`;
-      volExtraLabel.textContent = `${volExtra.value}%`;
-      toneCutoffLabel.textContent = `${toneCutoff.value} Hz`;
-      formantShiftLabel.textContent = `${formantShift.value} cents`;
-      detuneCentsLabel.textContent = `${detuneCents.value} cents`;
-      humanizeMsLabel.textContent = `${humanizeMs.value} ms`;
-      chorusDepthLabel.textContent = `${chorusDepth.value}%`;
-    }
-
-    function updateModeUI() {
-      const manual = modeSelect.value === 'single_manual';
-      singleIntervalGroup.style.display = manual ? 'flex' : 'none';
-    }
-
-    modeSelect.onchange = updateModeUI;
-    [volOriginal, volUpper, volLower, volExtra, toneCutoff, formantShift, detuneCents, humanizeMs, chorusDepth].forEach(el => el.oninput = updateLabels);
-    updateLabels();
-    updateModeUI();
+    // Init UI
+    els.modeSelect.onchange = () => {
+      els.singleIntervalGroup.style.display = els.modeSelect.value === 'single_manual' ? 'flex' : 'none';
+    };
+    inputs.forEach(id => document.getElementById(id).oninput()); // Trigger initial label update
 
     function stopAllSources() {
       activeSources.forEach(node => {
-        try { node.stop(); } catch (_) {}
-        node.onended = null;
+        try { node.stop(); node.disconnect(); } catch (_) {}
       });
       activeSources = [];
     }
@@ -412,506 +386,312 @@
         mediaRecorder.stop();
         mediaRecorder.stream.getTracks().forEach(t => t.stop());
       }
-      recordBtn.disabled = false;
-      stopRecordBtn.disabled = true;
-      playBtn.disabled = !originalBuffer;
-      playHarmonyOnlyBtn.disabled = !originalBuffer;
-      statusDiv.innerHTML = originalBuffer ? 'Detenido.' : 'Listo para grabar.';
-      document.title = '🎵 Armonizador Vocal Pro v6';
+      els.recordBtn.disabled = false;
+      els.stopRecordBtn.disabled = true;
+      els.playBtn.disabled = !originalBuffer;
+      els.playHarmonyOnlyBtn.disabled = !originalBuffer;
+      els.status.innerHTML = originalBuffer ? 'Detenido.' : 'Listo para grabar.';
+      els.engine.innerHTML = 'Esperando...<br><span style="color:#666;font-size:0.8em">v7.0 Ultra-Realistic Engine</span>';
+      document.title = '🎵 Armonizador Vocal Pro v7';
     }
 
-    // DSP utilities avanzadas
-    function createLowpass(ctx, freqHz) {
-      const lp = ctx.createBiquadFilter();
-      lp.type = 'lowpass';
-      lp.frequency.value = freqHz;
-      lp.Q.value = 0.7;
-      return lp;
+    // --- AUDIO PROCESSING CHAIN (PRO QUALITY) ---
+    
+    function createChain(ctx, isOriginal, params) {
+      const nodes = {};
+      
+      // 1. Highpass (Limpieza de graves sucios)
+      nodes.hp = ctx.createBiquadFilter();
+      nodes.hp.type = 'highpass';
+      nodes.hp.frequency.value = isOriginal ? 60 : 90; // Más limpio en armonías
+      nodes.hp.Q.value = 0.7;
+
+      // 2. Low Shelf (Potencia de Graves - Boost)
+      nodes.bass = ctx.createBiquadFilter();
+      nodes.bass.type = 'lowshelf';
+      nodes.bass.frequency.value = 150; // Frecuencia central de graves
+      nodes.bass.gain.value = isOriginal ? params.bassBoost * 0.5 : params.bassBoost; // Más graves en armonías para cuerpo
+      nodes.bass.Q.value = 1.0;
+
+      // 3. Peaking (Presencia Vocal)
+      nodes.presence = ctx.createBiquadFilter();
+      nodes.presence.type = 'peaking';
+      nodes.presence.frequency.value = 3500;
+      nodes.presence.Q.value = 1.5;
+      nodes.presence.gain.value = isOriginal ? 2 : 4; // Más presencia en armonías para que corten la mezcla
+
+      // 4. Lowpass (Brillo / Aire)
+      nodes.lp = ctx.createBiquadFilter();
+      nodes.lp.type = 'lowpass';
+      nodes.lp.frequency.value = params.cutoff;
+      nodes.lp.Q.value = 0.7;
+
+      // 5. Compressor (Control Dinámico)
+      nodes.comp = ctx.createDynamicsCompressor();
+      nodes.comp.threshold.value = -18;
+      nodes.comp.knee.value = 24;
+      nodes.comp.ratio.value = 3;
+      nodes.comp.attack.value = 0.003;
+      nodes.comp.release.value = 0.25;
+
+      // 6. Gain Final
+      nodes.gain = ctx.createGain();
+      nodes.gain.gain.value = params.volume;
+
+      // Conexiones
+      nodes.hp.connect(nodes.bass);
+      nodes.bass.connect(nodes.presence);
+      nodes.presence.connect(nodes.lp);
+      nodes.lp.connect(nodes.comp);
+      nodes.comp.connect(nodes.gain);
+
+      return nodes;
     }
 
-    function createHighpass(ctx, freqHz = 120) {
-      const hp = ctx.createBiquadFilter();
-      hp.type = 'highpass';
-      hp.frequency.value = freqHz;
-      hp.Q.value = 0.707;
-      return hp;
+    function createChorus(ctx, depthPct, delayBaseMs) {
+      const delay = ctx.createDelay(1.0);
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      
+      const depthSec = (depthPct / 100) * 0.015; // Max 15ms depth
+      const baseSec = delayBaseMs / 1000;
+      
+      delay.delayTime.value = baseSec;
+      lfo.frequency.value = 0.3 + Math.random() * 0.2; // Variación aleatoria en velocidad
+      lfoGain.gain.value = depthSec;
+      
+      lfo.connect(lfoGain);
+      lfoGain.connect(delay.delayTime);
+      lfo.start();
+      
+      return { delay, lfo, lfoGain };
     }
 
-    function createBandpass(ctx, centerFreq, Q = 1.0) {
-      const bp = ctx.createBiquadFilter();
-      bp.type = 'bandpass';
-      bp.frequency.value = centerFreq;
-      bp.Q.value = Q;
-      return bp;
-    }
-
-    function createCompressor(ctx) {
-      const comp = ctx.createDynamicsCompressor();
-      comp.threshold.value = -12;
-      comp.knee.value = 20;
-      comp.ratio.value = 4;
-      comp.attack.value = 0.003;
-      comp.release.value = 0.25;
-      return comp;
-    }
-
-    function createPresenceBoost(ctx, freq = 3500, gain = 2) {
-      const peq = ctx.createBiquadFilter();
-      peq.type = 'peaking';
-      peq.frequency.value = freq;
-      peq.Q.value = 2.0;
-      peq.gain.value = gain;
-      return peq;
-    }
-
-    function createChorusLFO(ctx, delayNode, depthMs = 6, rateHz = 0.33) {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = rateHz;
-      gain.gain.value = depthMs / 1000;
-      osc.connect(gain);
-      gain.connect(delayNode.delayTime);
-      osc.start();
-      return { osc, gain };
-    }
-
-    function applyFormantShift(buffer, cents) {
-      // Simulación de cambio de formantes mediante pitch shifting de componentes espectrales
-      // En un entorno real, esto requeriría FFT y procesamiento espectral más complejo
-      // Esta implementación simplificada usa pitch shifting como aproximación
-      return new Promise((resolve) => {
-        resolve(buffer); // Placeholder - implementación real requiere análisis espectral
-      });
-    }
-
-    function pitchShift(inputBuffer, ratio, detuneCents = 0) {
+    function pitchShift(buffer, ratio, detuneCents) {
       return new Promise((resolve, reject) => {
         try {
-          // Aplicar detune aleatorio si se especifica
-          let adjustedRatio = ratio;
+          // Aplicar detune aleatorio micro-tonal para realismo
+          let finalRatio = ratio;
           if (detuneCents > 0) {
-            const detuneFactor = detuneCents / 1200; // Convertir cents a semitono
-            const randomDetune = (Math.random() * 2 - 1) * detuneFactor;
-            adjustedRatio *= Math.pow(2, randomDetune / 12);
+            const randomDetune = (Math.random() * 2 - 1) * detuneCents;
+            finalRatio *= Math.pow(2, randomDetune / 1200);
           }
 
-          const sampleRate = inputBuffer.sampleRate;
-          const duration = inputBuffer.duration;
-          const length = Math.ceil(sampleRate * duration);
-
+          const sampleRate = buffer.sampleRate;
+          const length = Math.ceil(sampleRate * buffer.duration);
           const offlineCtx = new OfflineAudioContext(2, length, sampleRate);
-          const shifter = new PitchShifter(offlineCtx, inputBuffer, 4096);
-          shifter.pitch = adjustedRatio;
+          
+          const shifter = new PitchShifter(offlineCtx, buffer, 4096);
+          shifter.pitch = finalRatio;
           shifter.tempo = 1.0;
           shifter.rate = 1.0;
           shifter.connect(offlineCtx.destination);
 
           offlineCtx.startRendering().then(resolve).catch(reject);
-        } catch (err) {
-          reject(err);
-        }
+        } catch (e) { reject(e); }
       });
     }
 
-    function connectAndStartSource({
-      buffer,
-      volume,
-      cutoffHz,
-      formantShiftCents,
-      delayMs,
-      chorusPercent,
-      detuneCents,
-      isOriginal,
-      startAt
-    }) {
-      if (volume <= 0) return;
+    async function buildHarmonies(mode, detuneCents) {
+      const isFalsetto = els.falsettoSelect.value === 'on';
+      let ratios = [];
+      let roles = [];
 
-      const src = audioContext.createBufferSource();
-      src.buffer = buffer;
-
-      // Crear nodos de efectos
-      const hp = createHighpass(audioContext, isOriginal ? 80 : 120);
-      const lp = createLowpass(audioContext, isOriginal ? 12000 : cutoffHz);
-      const comp = createCompressor(audioContext);
-      const presence = createPresenceBoost(audioContext, 4000, isOriginal ? 1.5 : 1.0);
-      
-      const gain = audioContext.createGain();
-      gain.gain.value = volume;
-
-      let lfo = null;
-
-      // Aplicar formant shift si es necesario
-      if (formantShiftCents !== 0) {
-        // Placeholder para formant shifting real
-        // En la práctica, se necesitaría un sistema más sofisticado
-      }
-
-      if (!isOriginal) {
-        // Aplicar humanización y coro a armonías
-        const delay = audioContext.createDelay(1);
-        const baseDelaySec = Math.max(0, delayMs) / 1000;
-        // Agregar variación aleatoria para humanización
-        const humanizedDelay = baseDelaySec + (Math.random() * 0.02 - 0.01); // ±10ms
-        delay.delayTime.value = humanizedDelay;
-
-        const depthMs = (chorusPercent / 100) * 10;
-        lfo = createChorusLFO(audioContext, delay, depthMs, 0.25 + Math.random() * 0.2);
-
-        src.connect(delay);
-        delay.connect(hp);
-      } else {
-        src.connect(hp);
-      }
-
-      // Conectar cadena de efectos
-      hp.connect(lp);
-      lp.connect(presence);
-      presence.connect(comp);
-      comp.connect(gain);
-      gain.connect(audioContext.destination);
-
-      src.start(startAt);
-      activeSources.push(src);
-
-      src.onended = () => {
-        const idx = activeSources.indexOf(src);
-        if (idx >= 0) activeSources.splice(idx, 1);
-
-        if (lfo) {
-          try { 
-            lfo.osc.stop(); 
-            lfo.osc.disconnect();
-            lfo.gain.disconnect();
-          } catch (_) {}
-        }
-        if (activeSources.length === 0) {
-          statusDiv.textContent = 'Reproducción finalizada.';
-          document.title = '🎵 Armonizador Vocal Pro v6';
-        }
-      };
-    }
-
-    async function buildHarmonyBuffersByMode(mode, detuneCents) {
-      const falsettoOn = falsettoSelect.value === 'on';
-
-      switch (mode) {
+      // Definición de intervalos según modo
+      switch(mode) {
         case 'single_manual':
-          const ratio = parseFloat(intervalSelect.value);
-          const buffer = await pitchShift(originalBuffer, ratio, detuneCents);
-          const st = Math.round(12 * Math.log2(ratio));
-          return {
-            picked: [st],
-            buffers: [{ role: 'single', buffer, st }]
-          };
-
+          ratios = [parseFloat(els.intervalSelect.value)];
+          roles = ['single'];
+          break;
         case 'dual_natural':
-          const ratios1 = falsettoOn ? [2.0, 1.4983] : [1.1892, 0.8409];
-          const [b1a, b1b] = await Promise.all([
-            pitchShift(originalBuffer, ratios1[0], detuneCents),
-            pitchShift(originalBuffer, ratios1[1], detuneCents)
-          ]);
-          const st1a = Math.round(12 * Math.log2(ratios1[0]));
-          const st1b = Math.round(12 * Math.log2(ratios1[1]));
-          return {
-            picked: [st1a, st1b],
-            buffers: [
-              { role: 'upper', buffer: b1a, st: st1a },
-              { role: 'lower', buffer: b1b, st: st1b }
-            ]
-          };
-
+          ratios = isFalsetto ? [2.0, 1.4983] : [1.1892, 0.8409]; // Octava+Quinta o 3ra m + 3ra m desc
+          roles = ['upper', 'lower'];
+          break;
         case 'dual_wide':
-          const ratios2 = falsettoOn ? [2.3784, 1.2599] : [1.2599, 0.7937]; // +4, -4
-          const [b2a, b2b] = await Promise.all([
-            pitchShift(originalBuffer, ratios2[0], detuneCents),
-            pitchShift(originalBuffer, ratios2[1], detuneCents)
-          ]);
-          const st2a = Math.round(12 * Math.log2(ratios2[0]));
-          const st2b = Math.round(12 * Math.log2(ratios2[1]));
-          return {
-            picked: [st2a, st2b],
-            buffers: [
-              { role: 'upper', buffer: b2a, st: st2a },
-              { role: 'lower', buffer: b2b, st: st2b }
-            ]
-          };
-
+          ratios = isFalsetto ? [2.3784, 1.2599] : [1.2599, 0.7937]; // 4ta M + 4ta M desc
+          roles = ['upper', 'lower'];
+          break;
         case 'triple_chorus':
-          const ratios3 = falsettoOn ? [2.0, 1.4983, 1.1892] : [1.1892, 0.8409, 1.4983];
-          const [b3a, b3b, b3c] = await Promise.all([
-            pitchShift(originalBuffer, ratios3[0], detuneCents),
-            pitchShift(originalBuffer, ratios3[1], detuneCents),
-            pitchShift(originalBuffer, ratios3[2], detuneCents)
-          ]);
-          const st3a = Math.round(12 * Math.log2(ratios3[0]));
-          const st3b = Math.round(12 * Math.log2(ratios3[1]));
-          const st3c = Math.round(12 * Math.log2(ratios3[2]));
-          return {
-            picked: [st3a, st3b, st3c],
-            buffers: [
-              { role: 'upper', buffer: b3a, st: st3a },
-              { role: 'lower', buffer: b3b, st: st3b },
-              { role: 'extra', buffer: b3c, st: st3c }
-            ]
-          };
-
+          ratios = isFalsetto ? [2.0, 1.4983, 1.1892] : [1.1892, 0.8409, 1.4983];
+          roles = ['upper', 'lower', 'extra'];
+          break;
         case 'parallel_fifths':
-          const ratios4 = falsettoOn ? [3.0, 1.1892] : [1.4983, 0.8909]; // +7, -2
-          const [b4a, b4b] = await Promise.all([
-            pitchShift(originalBuffer, ratios4[0], detuneCents),
-            pitchShift(originalBuffer, ratios4[1], detuneCents)
-          ]);
-          const st4a = Math.round(12 * Math.log2(ratios4[0]));
-          const st4b = Math.round(12 * Math.log2(ratios4[1]));
-          return {
-            picked: [st4a, st4b],
-            buffers: [
-              { role: 'upper', buffer: b4a, st: st4a },
-              { role: 'lower', buffer: b4b, st: st4b }
-            ]
-          };
-
+          ratios = isFalsetto ? [3.0, 1.1892] : [1.4983, 0.8909];
+          roles = ['upper', 'lower'];
+          break;
+        case 'octave_harmony':
+          ratios = [2.0, 0.5];
+          roles = ['upper', 'lower'];
+          break;
         default:
-          // Fallback a dual natural
-          const [fb1, fb2] = await Promise.all([
-            pitchShift(originalBuffer, 1.1892, detuneCents),
-            pitchShift(originalBuffer, 0.8409, detuneCents)
-          ]);
-          return {
-            picked: [3, -3],
-            buffers: [
-              { role: 'upper', buffer: fb1, st: 3 },
-              { role: 'lower', buffer: fb2, st: -3 }
-            ]
-          };
+          ratios = [1.1892, 0.8409];
+          roles = ['upper', 'lower'];
       }
+
+      const promises = ratios.map(r => pitchShift(originalBuffer, r, detuneCents));
+      const buffers = await Promise.all(promises);
+      
+      return buffers.map((buf, i) => ({
+        buffer: buf,
+        role: roles[i],
+        semitones: Math.round(12 * Math.log2(ratios[i]))
+      }));
     }
 
-    async function generateAndPlay(onlyHarmony = false) {
+    async function generateAndPlay(onlyHarmony) {
       if (!originalBuffer) return;
-
-      errorMsg.textContent = '';
+      els.error.textContent = '';
       stopAllSources();
 
       if (!audioContext) audioContext = new AudioContext();
       if (audioContext.state === 'suspended') await audioContext.resume();
 
-      statusDiv.innerHTML = '<span class="rec-indicator"></span> Generando armonías realistas...';
-      document.title = '🎵 [PLAYING] Armonizador Vocal Pro v6';
+      els.status.innerHTML = '<span class="recording-indicator"></span> Procesando DSP...';
+      document.title = '🎵 [PLAYING] Armonizador Vocal Pro v7';
 
       try {
-        const mode = modeSelect.value;
-        const detuneValue = parseInt(detuneCents.value);
-        const out = await buildHarmonyBuffersByMode(mode, detuneValue);
+        const mode = els.modeSelect.value;
+        const detuneVal = parseInt(document.getElementById('detuneCents').value);
+        const harmonyBuffers = await buildHarmonies(mode, detuneVal);
 
-        pickedIntervalsDiv.textContent = out.picked.map(st => `${st>0?'+':''}${st} st`).join('  |  ');
-        engineInfoDiv.textContent = `Modo: ${mode}, Falsete: ${falsettoSelect.value}, Detune: ±${detuneValue}c`;
+        // Update UI Info
+        els.picked.textContent = harmonyBuffers.map(h => `${h.semitones > 0 ? '+' : ''}${h.semitones} st`).join('  |  ');
+        els.engine.innerHTML = `Modo: ${mode.replace('_', ' ').toUpperCase()}<br>Falsete: ${els.falsettoSelect.value}<br>Detune: ±${detuneVal}c`;
 
-        const volOrig = Number(volOriginal.value) / 100;
-        const volUp = Number(volUpper.value) / 100;
-        const volLo = Number(volLower.value) / 100;
-        const volEx = Number(volExtra.value) / 100;
-        const cutoffHz = Number(toneCutoff.value);
-        const formantShiftCents = Number(formantShift.value);
-        const humanMs = Number(humanizeMs.value);
-        const chorPct = Number(chorusDepth.value);
+        // Params
+        const p = {
+          cutoff: parseInt(document.getElementById('toneCutoff').value),
+          bassBoost: parseInt(document.getElementById('bassBoost').value),
+          humanMs: parseInt(document.getElementById('humanizeMs').value),
+          chorusPct: parseInt(document.getElementById('chorusDepth').value)
+        };
 
-        const now = audioContext.currentTime + 0.03;
+        const now = audioContext.currentTime + 0.05;
 
-        // Reproducir voz original
-        connectAndStartSource({
-          buffer: originalBuffer,
-          volume: onlyHarmony ? 0 : volOrig,
-          cutoffHz,
-          formantShiftCents,
-          delayMs: 0,
-          chorusPercent: 0,
-          detuneCents: 0,
-          isOriginal: true,
-          startAt: now
-        });
-
-        // Reproducir armonías según modo
-        if (out.buffers.length === 1) {
-          // Modo simple
-          connectAndStartSource({
-            buffer: out.buffers[0].buffer,
-            volume: volUp,
-            cutoffHz,
-            formantShiftCents,
-            delayMs: humanMs,
-            chorusPercent: chorPct,
-            detuneCents,
-            isOriginal: false,
-            startAt: now
-          });
-          ratioDisplay.textContent = `Simple: ${pickedIntervalsDiv.textContent}`;
-        } else if (out.buffers.length === 2) {
-          // Modo dual
-          connectAndStartSource({
-            buffer: out.buffers[0].buffer,
-            volume: volUp,
-            cutoffHz,
-            formantShiftCents,
-            delayMs: humanMs,
-            chorusPercent: chorPct,
-            detuneCents,
-            isOriginal: false,
-            startAt: now
-          });
-
-          connectAndStartSource({
-            buffer: out.buffers[1].buffer,
-            volume: volLo,
-            cutoffHz: Math.max(2200, cutoffHz - 350),
-            formantShiftCents,
-            delayMs: humanMs + 12,
-            chorusPercent: Math.max(0, chorPct - 8),
-            detuneCents,
-            isOriginal: false,
-            startAt: now
-          });
-
-          ratioDisplay.textContent = `Dual: ${pickedIntervalsDiv.textContent}`;
-        } else if (out.buffers.length === 3) {
-          // Modo triple
-          connectAndStartSource({
-            buffer: out.buffers[0].buffer,
-            volume: volUp,
-            cutoffHz,
-            formantShiftCents,
-            delayMs: humanMs,
-            chorusPercent: chorPct,
-            detuneCents,
-            isOriginal: false,
-            startAt: now
-          });
-
-          connectAndStartSource({
-            buffer: out.buffers[1].buffer,
-            volume: volLo,
-            cutoffHz: Math.max(2200, cutoffHz - 350),
-            formantShiftCents,
-            delayMs: humanMs + 15,
-            chorusPercent: Math.max(0, chorPct - 8),
-            detuneCents,
-            isOriginal: false,
-            startAt: now
-          });
-
-          connectAndStartSource({
-            buffer: out.buffers[2].buffer,
-            volume: volEx,
-            cutoffHz: Math.max(2000, cutoffHz - 500),
-            formantShiftCents,
-            delayMs: humanMs + 22,
-            chorusPercent: Math.max(0, chorPct - 12),
-            detuneCents,
-            isOriginal: false,
-            startAt: now
-          });
-
-          ratioDisplay.textContent = `Triple: ${pickedIntervalsDiv.textContent}`;
+        // 1. Original Voice Chain
+        if (!onlyHarmony) {
+          const vol = parseInt(document.getElementById('volOriginal').value) / 100;
+          const chain = createChain(audioContext, true, { ...p, volume: vol, cutoff: 12000, bassBoost: 0 });
+          const src = audioContext.createBufferSource();
+          src.buffer = originalBuffer;
+          src.connect(chain.hp);
+          chain.gain.connect(audioContext.destination);
+          src.start(now);
+          activeSources.push(src);
         }
 
-        statusDiv.innerHTML = `<span class="rec-indicator"></span> ${onlyHarmony ? 'Reproduciendo solo armonías...' : 'Reproduciendo mezcla realista...'}`;
+        // 2. Harmony Chains
+        harmonyBuffers.forEach((h, index) => {
+          let volKey = 'volUpper';
+          if (h.role === 'lower') volKey = 'volLower';
+          if (h.role === 'extra') volKey = 'volExtra';
+          if (h.role === 'single') volKey = 'volUpper';
+
+          const vol = parseInt(document.getElementById(volKey).value) / 100;
+          if (vol <= 0) return;
+
+          const chain = createChain(audioContext, false, { ...p, volume: vol });
+          const src = audioContext.createBufferSource();
+          src.buffer = h.buffer;
+
+          // Humanization & Chorus
+          const delayMs = p.humanMs + (index * 12); // Stagger delays
+          const chorusObj = createChorus(audioContext, p.chorusPct, delayMs);
+          
+          src.connect(chorusObj.delay);
+          chorusObj.delay.connect(chain.hp);
+          chain.gain.connect(audioContext.destination);
+          
+          src.start(now);
+          activeSources.push(src);
+          
+          // Cleanup LFO on end
+          src.onended = () => {
+            try { chorusObj.lfo.stop(); } catch(e){}
+          };
+        });
+
+        els.status.textContent = onlyHarmony ? 'Reproduciendo solo armonías...' : 'Reproduciendo mezcla completa...';
+
       } catch (e) {
-        errorMsg.textContent = `Error en procesamiento: ${e.message}`;
-        statusDiv.textContent = 'Error.';
-        document.title = '🎵 Armonizador Vocal Pro v6';
+        els.error.textContent = 'Error: ' + e.message;
+        els.status.textContent = 'Error en procesamiento.';
       }
     }
 
-    // Grabación con configuración profesional
-    recordBtn.onclick = async () => {
-      errorMsg.textContent = '';
+    // Recording Logic
+    els.recordBtn.onclick = async () => {
+      els.error.textContent = '';
       try {
         stopAll();
-
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: {
             echoCancellation: true,
             noiseSuppression: true,
-            autoGainControl: true,
-            sampleRate: 44100,
+            autoGainControl: false, // Desactivado para mejor dinámica
+            sampleRate: 48000, // Alta calidad
             channelCount: 1
           }
         });
 
-        const mimeType = 'audio/webm;codecs=opus'; // Codec de alta calidad
+        const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') 
+          ? 'audio/webm;codecs=opus' 
+          : 'audio/webm';
+          
         mediaRecorder = new MediaRecorder(stream, { mimeType });
-
         audioChunks = [];
 
-        mediaRecorder.ondataavailable = e => {
-          if (e.data.size > 0) {
-            audioChunks.push(e.data);
-          }
-        };
+        mediaRecorder.ondataavailable = e => { if(e.data.size > 0) audioChunks.push(e.data); };
 
         mediaRecorder.onstop = async () => {
           try {
-            statusDiv.innerHTML = '<span class="rec-indicator"></span> Procesando grabación...';
-            
+            els.status.innerHTML = '<span class="recording-indicator"></span> Decodificando audio de alta resolución...';
             const blob = new Blob(audioChunks, { type: mimeType });
             const arrayBuf = await blob.arrayBuffer();
-
+            
             if (!audioContext) audioContext = new AudioContext();
             originalBuffer = await audioContext.decodeAudioData(arrayBuf);
-
-            playBtn.disabled = false;
-            playHarmonyOnlyBtn.disabled = false;
-            recordBtn.disabled = false;
-            stopRecordBtn.disabled = true;
-            statusDiv.textContent = `Grabación lista • Duración: ${(originalBuffer.duration).toFixed(2)}s • Canales: ${originalBuffer.numberOfChannels}`;
+            
+            els.playBtn.disabled = false;
+            els.playHarmonyOnlyBtn.disabled = false;
+            els.recordBtn.disabled = false;
+            els.stopRecordBtn.disabled = true;
+            els.status.textContent = `Grabación lista • ${(originalBuffer.duration).toFixed(1)}s • ${originalBuffer.sampleRate}Hz`;
+            document.title = '🎵 [READY] Armonizador Vocal Pro v7';
           } catch (err) {
-            errorMsg.textContent = `Error decodificando audio: ${err.message}`;
-            statusDiv.textContent = 'Error.';
+            els.error.textContent = 'Error al decodificar: ' + err.message;
           }
         };
 
         mediaRecorder.start();
-        recordBtn.disabled = true;
-        stopRecordBtn.disabled = false;
-        playBtn.disabled = true;
-        playHarmonyOnlyBtn.disabled = true;
-        statusDiv.innerHTML = '<span class="rec-indicator"></span> Grabando voz... (habla ahora)';
-        document.title = '🎵 [RECORDING] Armonizador Vocal Pro v6';
+        els.recordBtn.disabled = true;
+        els.stopRecordBtn.disabled = false;
+        els.playBtn.disabled = true;
+        els.playHarmonyOnlyBtn.disabled = true;
+        els.status.innerHTML = '<span class="recording-indicator"></span> GRABANDO... (Canta ahora)';
+        document.title = '🔴 [REC] Armonizador Vocal Pro v7';
       } catch (e) {
-        errorMsg.textContent = `Error de micrófono: ${e.message}`;
-        statusDiv.textContent = 'Error. Asegúrese de permitir acceso al micrófono.';
-        recordBtn.disabled = false;
+        els.error.textContent = 'Error de micrófono: ' + e.message;
+        els.recordBtn.disabled = false;
       }
     };
 
-    stopRecordBtn.onclick = () => {
+    els.stopRecordBtn.onclick = () => {
       if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
         mediaRecorder.stream.getTracks().forEach(t => t.stop());
-        stopRecordBtn.disabled = true;
+        els.stopRecordBtn.disabled = true;
       }
     };
 
-    playBtn.onclick = () => generateAndPlay(false);
-    playHarmonyOnlyBtn.onclick = () => generateAndPlay(true);
-    stopAllBtn.onclick = stopAll;
+    els.playBtn.onclick = () => generateAndPlay(false);
+    els.playHarmonyOnlyBtn.onclick = () => generateAndPlay(true);
+    els.stopAllBtn.onclick = stopAll;
 
-    // Inicializar contexto de audio en interacción del usuario
-    document.body.addEventListener('touchstart', () => {
-      if (!audioContext) audioContext = new AudioContext();
-    }, { once: true });
-
+    // Unlock Audio Context
     document.body.addEventListener('click', () => {
       if (audioContext && audioContext.state === 'suspended') audioContext.resume();
-    });
-
-    // Actualizar info del motor en tiempo real
-    setInterval(() => {
-      if (activeSources.length > 0) {
-        engineInfoDiv.textContent += ' • PLAYING';
-      }
-    }, 2000);
+    }, { once: true });
   </script>
 </body>
 </html>
