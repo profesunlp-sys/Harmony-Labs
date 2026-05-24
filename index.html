@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Armonizador Vocal Pro v7 (Ultra Realista)</title>
+  <title>Armonizador Vocal Pro v7.1 (Fix Mic)</title>
   <style>
     :root {
       --primary: #4a90e2;
@@ -43,7 +43,7 @@
     }
     
     /* Buttons */
-    button {
+    button, .file-upload-label {
       font-size: 1.1em; 
       font-weight: 600;
       padding: 14px 24px; 
@@ -56,8 +56,11 @@
       color: white;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      display: inline-block;
+      text-decoration: none;
+      vertical-align: middle;
     }
-    button:hover:not(:disabled) { 
+    button:hover:not(:disabled), .file-upload-label:hover { 
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(0,0,0,0.3);
       filter: brightness(1.1);
@@ -76,6 +79,7 @@
     .btn-play { background: linear-gradient(135deg, #3498db, #2980b9); }
     .btn-harmony { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
     .btn-danger { background: linear-gradient(135deg, #c0392b, #a93226); }
+    .btn-file { background: linear-gradient(135deg, #27ae60, #219150); }
 
     /* Cards & Inputs */
     .card {
@@ -153,6 +157,10 @@
       font-weight: 600; 
       min-height: 24px; 
       margin-top: 10px;
+      background: rgba(192, 57, 43, 0.2);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(192, 57, 43, 0.4);
     }
     .info-grid {
       display: grid;
@@ -194,23 +202,29 @@
       margin-right: 8px;
       animation: pulse-red 1.5s infinite;
     }
+
+    /* Hidden File Input */
+    #fileInput { display: none; }
   </style>
 </head>
 <body>
 
-  <!-- HEADER & MAIN CONTROLS (TOP PRIORITY) -->
-  <h2>🎵 Armonizador Vocal Pro v7</h2>
+  <!-- HEADER & MAIN CONTROLS -->
+  <h2>🎵 Armonizador Vocal Pro v7.1</h2>
   <p style="margin-top:-10px; opacity:0.8; margin-bottom:20px;">Calidad Ultra-Realista • Graves Profundos • Agudos Cristalinos</p>
 
   <div class="main-controls">
     <button id="recordBtn" class="btn-record">🎤 Grabar Voz</button>
+    <label for="fileInput" class="btn-file">📂 Cargar Archivo</label>
+    <input type="file" id="fileInput" accept="audio/*" />
+    
     <button id="stopRecordBtn" class="btn-stop-rec" disabled>⏹ Detener</button>
     <button id="playBtn" class="btn-play" disabled>🔊 Mezcla Final</button>
     <button id="playHarmonyOnlyBtn" class="btn-harmony" disabled>🎵 Solo Armonías</button>
     <button id="stopAllBtn" class="btn-danger">⏹ STOP TODO</button>
   </div>
 
-  <div id="status">Listo para grabar. Configura tus ajustes abajo.</div>
+  <div id="status">Listo. Usa "Grabar Voz" o "Cargar Archivo".</div>
   <div id="errorMsg"></div>
 
   <!-- CONFIGURATION CARDS -->
@@ -316,7 +330,7 @@
     </div>
     <div class="info-box">
       <h4>Estado del Motor DSP</h4>
-      <div id="engineInfo" class="mono">Esperando...<br><span style="color:#666;font-size:0.8em">v7.0 Ultra-Realistic Engine</span></div>
+      <div id="engineInfo" class="mono">Esperando...<br><span style="color:#666;font-size:0.8em">v7.1 Ultra-Realistic Engine</span></div>
     </div>
   </div>
 
@@ -334,6 +348,7 @@
       playBtn: document.getElementById('playBtn'),
       playHarmonyOnlyBtn: document.getElementById('playHarmonyOnlyBtn'),
       stopAllBtn: document.getElementById('stopAllBtn'),
+      fileInput: document.getElementById('fileInput'),
       modeSelect: document.getElementById('modeSelect'),
       intervalSelect: document.getElementById('intervalSelect'),
       singleIntervalGroup: document.getElementById('singleIntervalGroup'),
@@ -371,7 +386,7 @@
     els.modeSelect.onchange = () => {
       els.singleIntervalGroup.style.display = els.modeSelect.value === 'single_manual' ? 'flex' : 'none';
     };
-    inputs.forEach(id => document.getElementById(id).oninput()); // Trigger initial label update
+    inputs.forEach(id => document.getElementById(id).oninput()); 
 
     function stopAllSources() {
       activeSources.forEach(node => {
@@ -390,9 +405,9 @@
       els.stopRecordBtn.disabled = true;
       els.playBtn.disabled = !originalBuffer;
       els.playHarmonyOnlyBtn.disabled = !originalBuffer;
-      els.status.innerHTML = originalBuffer ? 'Detenido.' : 'Listo para grabar.';
-      els.engine.innerHTML = 'Esperando...<br><span style="color:#666;font-size:0.8em">v7.0 Ultra-Realistic Engine</span>';
-      document.title = '🎵 Armonizador Vocal Pro v7';
+      els.status.innerHTML = originalBuffer ? 'Detenido.' : 'Listo. Usa "Grabar Voz" o "Cargar Archivo".';
+      els.engine.innerHTML = 'Esperando...<br><span style="color:#666;font-size:0.8em">v7.1 Ultra-Realistic Engine</span>';
+      document.title = '🎵 Armonizador Vocal Pro v7.1';
     }
 
     // --- AUDIO PROCESSING CHAIN (PRO QUALITY) ---
@@ -403,14 +418,14 @@
       // 1. Highpass (Limpieza de graves sucios)
       nodes.hp = ctx.createBiquadFilter();
       nodes.hp.type = 'highpass';
-      nodes.hp.frequency.value = isOriginal ? 60 : 90; // Más limpio en armonías
+      nodes.hp.frequency.value = isOriginal ? 60 : 90; 
       nodes.hp.Q.value = 0.7;
 
       // 2. Low Shelf (Potencia de Graves - Boost)
       nodes.bass = ctx.createBiquadFilter();
       nodes.bass.type = 'lowshelf';
-      nodes.bass.frequency.value = 150; // Frecuencia central de graves
-      nodes.bass.gain.value = isOriginal ? params.bassBoost * 0.5 : params.bassBoost; // Más graves en armonías para cuerpo
+      nodes.bass.frequency.value = 150; 
+      nodes.bass.gain.value = isOriginal ? params.bassBoost * 0.5 : params.bassBoost; 
       nodes.bass.Q.value = 1.0;
 
       // 3. Peaking (Presencia Vocal)
@@ -418,7 +433,7 @@
       nodes.presence.type = 'peaking';
       nodes.presence.frequency.value = 3500;
       nodes.presence.Q.value = 1.5;
-      nodes.presence.gain.value = isOriginal ? 2 : 4; // Más presencia en armonías para que corten la mezcla
+      nodes.presence.gain.value = isOriginal ? 2 : 4; 
 
       // 4. Lowpass (Brillo / Aire)
       nodes.lp = ctx.createBiquadFilter();
@@ -453,11 +468,11 @@
       const lfo = ctx.createOscillator();
       const lfoGain = ctx.createGain();
       
-      const depthSec = (depthPct / 100) * 0.015; // Max 15ms depth
+      const depthSec = (depthPct / 100) * 0.015; 
       const baseSec = delayBaseMs / 1000;
       
       delay.delayTime.value = baseSec;
-      lfo.frequency.value = 0.3 + Math.random() * 0.2; // Variación aleatoria en velocidad
+      lfo.frequency.value = 0.3 + Math.random() * 0.2; 
       lfoGain.gain.value = depthSec;
       
       lfo.connect(lfoGain);
@@ -470,7 +485,6 @@
     function pitchShift(buffer, ratio, detuneCents) {
       return new Promise((resolve, reject) => {
         try {
-          // Aplicar detune aleatorio micro-tonal para realismo
           let finalRatio = ratio;
           if (detuneCents > 0) {
             const randomDetune = (Math.random() * 2 - 1) * detuneCents;
@@ -497,18 +511,17 @@
       let ratios = [];
       let roles = [];
 
-      // Definición de intervalos según modo
       switch(mode) {
         case 'single_manual':
           ratios = [parseFloat(els.intervalSelect.value)];
           roles = ['single'];
           break;
         case 'dual_natural':
-          ratios = isFalsetto ? [2.0, 1.4983] : [1.1892, 0.8409]; // Octava+Quinta o 3ra m + 3ra m desc
+          ratios = isFalsetto ? [2.0, 1.4983] : [1.1892, 0.8409]; 
           roles = ['upper', 'lower'];
           break;
         case 'dual_wide':
-          ratios = isFalsetto ? [2.3784, 1.2599] : [1.2599, 0.7937]; // 4ta M + 4ta M desc
+          ratios = isFalsetto ? [2.3784, 1.2599] : [1.2599, 0.7937]; 
           roles = ['upper', 'lower'];
           break;
         case 'triple_chorus':
@@ -547,18 +560,16 @@
       if (audioContext.state === 'suspended') await audioContext.resume();
 
       els.status.innerHTML = '<span class="recording-indicator"></span> Procesando DSP...';
-      document.title = '🎵 [PLAYING] Armonizador Vocal Pro v7';
+      document.title = '🎵 [PLAYING] Armonizador Vocal Pro v7.1';
 
       try {
         const mode = els.modeSelect.value;
         const detuneVal = parseInt(document.getElementById('detuneCents').value);
         const harmonyBuffers = await buildHarmonies(mode, detuneVal);
 
-        // Update UI Info
         els.picked.textContent = harmonyBuffers.map(h => `${h.semitones > 0 ? '+' : ''}${h.semitones} st`).join('  |  ');
         els.engine.innerHTML = `Modo: ${mode.replace('_', ' ').toUpperCase()}<br>Falsete: ${els.falsettoSelect.value}<br>Detune: ±${detuneVal}c`;
 
-        // Params
         const p = {
           cutoff: parseInt(document.getElementById('toneCutoff').value),
           bassBoost: parseInt(document.getElementById('bassBoost').value),
@@ -568,7 +579,6 @@
 
         const now = audioContext.currentTime + 0.05;
 
-        // 1. Original Voice Chain
         if (!onlyHarmony) {
           const vol = parseInt(document.getElementById('volOriginal').value) / 100;
           const chain = createChain(audioContext, true, { ...p, volume: vol, cutoff: 12000, bassBoost: 0 });
@@ -580,7 +590,6 @@
           activeSources.push(src);
         }
 
-        // 2. Harmony Chains
         harmonyBuffers.forEach((h, index) => {
           let volKey = 'volUpper';
           if (h.role === 'lower') volKey = 'volLower';
@@ -594,8 +603,7 @@
           const src = audioContext.createBufferSource();
           src.buffer = h.buffer;
 
-          // Humanization & Chorus
-          const delayMs = p.humanMs + (index * 12); // Stagger delays
+          const delayMs = p.humanMs + (index * 12); 
           const chorusObj = createChorus(audioContext, p.chorusPct, delayMs);
           
           src.connect(chorusObj.delay);
@@ -605,7 +613,6 @@
           src.start(now);
           activeSources.push(src);
           
-          // Cleanup LFO on end
           src.onended = () => {
             try { chorusObj.lfo.stop(); } catch(e){}
           };
@@ -619,17 +626,24 @@
       }
     }
 
-    // Recording Logic
+    // --- RECORDING & FILE LOADING ---
+
+    // 1. Microphone Recording
     els.recordBtn.onclick = async () => {
       els.error.textContent = '';
       try {
+        // Check for secure context
+        if (!window.isSecureContext) {
+          throw new Error("ERROR DE SEGURIDAD: El micrófono solo funciona en HTTPS o localhost. Por favor usa el botón 'Cargar Archivo' o sube esta página a un hosting con SSL.");
+        }
+
         stopAll();
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: {
             echoCancellation: true,
             noiseSuppression: true,
-            autoGainControl: false, // Desactivado para mejor dinámica
-            sampleRate: 48000, // Alta calidad
+            autoGainControl: false,
+            sampleRate: 48000,
             channelCount: 1
           }
         });
@@ -645,19 +659,16 @@
 
         mediaRecorder.onstop = async () => {
           try {
-            els.status.innerHTML = '<span class="recording-indicator"></span> Decodificando audio de alta resolución...';
+            els.status.innerHTML = '<span class="recording-indicator"></span> Decodificando audio...';
             const blob = new Blob(audioChunks, { type: mimeType });
             const arrayBuf = await blob.arrayBuffer();
             
             if (!audioContext) audioContext = new AudioContext();
             originalBuffer = await audioContext.decodeAudioData(arrayBuf);
             
-            els.playBtn.disabled = false;
-            els.playHarmonyOnlyBtn.disabled = false;
-            els.recordBtn.disabled = false;
-            els.stopRecordBtn.disabled = true;
+            enablePlaybackControls();
             els.status.textContent = `Grabación lista • ${(originalBuffer.duration).toFixed(1)}s • ${originalBuffer.sampleRate}Hz`;
-            document.title = '🎵 [READY] Armonizador Vocal Pro v7';
+            document.title = '🎵 [READY] Armonizador Vocal Pro v7.1';
           } catch (err) {
             els.error.textContent = 'Error al decodificar: ' + err.message;
           }
@@ -666,15 +677,51 @@
         mediaRecorder.start();
         els.recordBtn.disabled = true;
         els.stopRecordBtn.disabled = false;
-        els.playBtn.disabled = true;
-        els.playHarmonyOnlyBtn.disabled = true;
+        disablePlaybackControls();
         els.status.innerHTML = '<span class="recording-indicator"></span> GRABANDO... (Canta ahora)';
-        document.title = '🔴 [REC] Armonizador Vocal Pro v7';
+        document.title = '🔴 [REC] Armonizador Vocal Pro v7.1';
       } catch (e) {
-        els.error.textContent = 'Error de micrófono: ' + e.message;
+        els.error.innerHTML = `<strong>Error de Micrófono:</strong><br>${e.message}<br><br>Solución: Usa el botón verde "Cargar Archivo" para subir un MP3/WAV.`;
         els.recordBtn.disabled = false;
       }
     };
+
+    // 2. File Upload Logic (The Fix)
+    els.fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      els.error.textContent = '';
+      stopAll();
+      els.status.innerHTML = '<span class="recording-indicator"></span> Cargando archivo...';
+
+      try {
+        if (!audioContext) audioContext = new AudioContext();
+        
+        const arrayBuf = await file.arrayBuffer();
+        originalBuffer = await audioContext.decodeAudioData(arrayBuf);
+        
+        enablePlaybackControls();
+        els.fileInput.value = ''; // Reset input
+        els.status.textContent = `Archivo cargado: ${file.name} • ${(originalBuffer.duration).toFixed(1)}s`;
+        document.title = '🎵 [FILE LOADED] Armonizador Vocal Pro v7.1';
+      } catch (err) {
+        els.error.textContent = 'Error al leer archivo: ' + err.message;
+        els.status.textContent = 'Error cargando archivo.';
+      }
+    };
+
+    function enablePlaybackControls() {
+      els.playBtn.disabled = false;
+      els.playHarmonyOnlyBtn.disabled = false;
+      els.recordBtn.disabled = false;
+      els.stopRecordBtn.disabled = true;
+    }
+
+    function disablePlaybackControls() {
+      els.playBtn.disabled = true;
+      els.playHarmonyOnlyBtn.disabled = true;
+    }
 
     els.stopRecordBtn.onclick = () => {
       if (mediaRecorder && mediaRecorder.state === 'recording') {
