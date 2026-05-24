@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Armonizador Vocal</title>
+    <!-- NUEVA URL FUNCIONAL -->
+    <script src="https://cdn.jsdelivr.net/npm/soundtouchjs@0.1.30/dist/soundtouch.min.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 15px; }
+        button { font-size: 1.3em; padding: 12px 24px; margin: 8px; border-radius: 8px; }
+        button:disabled { opacity: 0.5; }
+        select, input[type=range] { font-size: 1.1em; padding: 6px; margin: 8px; }
+        .control-group { margin: 12px 0; }
+        label { display: inline-block; width: 120px; text-align: right; margin-right: 8px; }
+        #status { font-size: 1.1em; margin: 12px; color: #2c3e50; }
+        #ratioDisplay { font-size: 0.9em; color: #8e44ad; }
+        #errorMsg { color: red; }
+    </style>
+</head>
+<body>
+    <h2>🎵 Armonizador Vocal</h2>
+    <div class="control-group">
+        <label for="intervalSelect">Intervalo:</label>
+        <select id="intervalSelect">
+            <option value="1.2599">Tercera mayor (+4 st)</option>
+            <option value="1.1892" selected>Tercera menor (+3 st)</option>
+            <option value="1.4983">Quinta justa (+7 st)</option>
+            <option value="1.6818">Sexta mayor (+9 st)</option>
+            <option value="2.0000">Octava (+12 st)</option>
+            <option value="1.3348">Cuarta justa (+5 st)</option>
+            <option value="0.7937">Tercera mayor desc.</option>
+            <option value="0.8409">Tercera menor desc.</option>
+            <option value="0.6674">Quinta justa desc.</option>
+        </select>
+    </div>
+    <div class="control-group">
+        <label>Vol. Original:</label>
+        <input type="range" id="volOriginal" min="0" max="200" value="100" step="1">
+        <span id="volOrigLabel">100%</span>
+    </div>
+    <div class="control-group">
+        <label>Vol. Armonía:</label>
+        <input type="range" id="volHarmony" min="0" max="200" value="100" step="1">
+        <span id="volHarmLabel">100%</span>
+    </div>
+    <button id="recordBtn">🎤 Grabar</button>
+    <button id="stopRecordBtn" disabled>⏹ Detener grabación</button>
+    <button id="playBtn" disabled>🔊 Reproducir dúo</button>
+    <button id="playHarmonyOnlyBtn" disabled>🎵 Solo armonía</button>
+    <button id="stopAllBtn" style="background: #e74c3c; color: white;">⏹ STOP TODO</button>
+    <div id="status">Listo para grabar</div>
+    <div id="ratioDisplay"></div>
+    <div id="errorMsg"></div>
+
+    <script>
+        // UI
+        const recordBtn = document.getElementById('recordBtn');
+        const stopRecordBtn = document.getElementById('stopRecordBtn');
+        const playBtn = document.getElementById('playBtn');
+        const playHarmonyOnlyBtn = document.getElementById('playHarmonyOnlyBtn');
+        const stopAllBtn = document.getElementById('stopAllBtn');
+        const intervalSelect = document.getElementById('intervalSelect');
+        const volOriginal = document.getElementById('volOriginal');
+        const volHarmony = document.getElementById('volHarmony');
+        const volOrigLabel = document.getElementById('volOrigLabel');
+        const volHarmLabel = document.getElementById('volHarmLabel');
+        const statusDiv = document.getElementById('status');
+        const ratioDisplay = document.getElementById('ratioDisplay');
+        const errorMsg = document.getElementById('errorMsg');
+
+        volOriginal.oninput = () => volOrigLabel.textContent = volOriginal.value + '%';
+        volHarmony.oninput = () => volHarmLabel.textContent = volHarmony.value + '%';
+
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let audioContext = null;
+        let originalBuffer = null;
+        let activeSources = [];
+
+        function pitchShift(inputBuffer, ratio) {
+            return new Promise((resolve) => {
+                const sampleRate = inputBuffer.sampleRate;
+                const channels = inputBuffer.numberOfChannels;
+                const inputData = [];
+                for (let ch = 0; ch < channels; ch++) {
+                    inputData.push(inputBuffer.getChannelData(ch));
+                }
+                const st = new SoundTouch();
+                st.tempo = 1.0;
+                st.pitch = ratio;
+                st.rate = sampleRate;
+                const processedChannels = [];
+                for (let ch = 0; ch < channels; ch++) {
+                    st.clear();
+                    st.putSamples(inputData[ch], inputData[ch].length);
+                    st.flush();
+                    const output = [];
+                    while (true) {
+                        const buffer = new Float32Array(8192);
+                        const samples = st.receiveSamples(buffer, buffer.length);
+                        if (samples === 0) break;
+                        for (let i = 0; i < samples; i++) output.push(buffer[i]);
+                    }
+                    processedChannels.push(new Float32Array(output));
+                }
+                const outputLength = processedChannels[0].length;
+                const outputBuffer = audioContext.createBuffer(channels, outputLength, sampleRate);
+                for (let ch = 0; ch < channels; ch++) {
+                    outputBuffer.getChannelData(ch).set(processedChannels[ch]);
+                }
+                resolve(outputBuffer);
+            });
+        }
+
+        function getRatio() {
+            const r = parseFloat(intervalSelect.value);
+            ratioDisplay.textContent = `Ratio: ${r.toFixed(4)}`;
+            return r;
+        }
+
+        function stopAllSources() {
+            activeSources.forEach(s => { try { s.stop(); } catch(e) {} });
+            activeSources = [];
+        }
+
+        function stopAll() {
+            stopAllSources();
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(t => t.stop());
+            }
+            recordBtn.disabled = false;
+            stopRecordBtn.disabled = true;
+            playBtn.disabled = !originalBuffer;
+            playHarmonyOnlyBtn.disabled = !originalBuffer;
+            statusDiv.textContent = originalBuffer ? 'Detenido.' : 'Listo para grabar.';
+        }
+
+        recordBtn.onclick = async () => {
+            errorMsg.textContent = '';
+            try {
+                stopAll();
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = async () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    statusDiv.textContent = 'Procesando grabación...';
+                    const arrayBuf = await blob.arrayBuffer();
+                    if (!audioContext) audioContext = new AudioContext();
+                    originalBuffer = await audioContext.decodeAudioData(arrayBuf);
+                    playBtn.disabled = false;
+                    playHarmonyOnlyBtn.disabled = false;
+                    stopRecordBtn.disabled = true;
+                    recordBtn.disabled = false;
+                    statusDiv.textContent = 'Listo. Elegí intervalo y reproducí.';
+                };
+                mediaRecorder.start();
+                statusDiv.textContent = 'Grabando...';
+                recordBtn.disabled = true;
+                stopRecordBtn.disabled = false;
+                playBtn.disabled = true;
+                playHarmonyOnlyBtn.disabled = true;
+            } catch (e) {
+                errorMsg.textContent = 'Error al acceder al micrófono: ' + e.message;
+                recordBtn.disabled = false;
+            }
+        };
+
+        stopRecordBtn.onclick = () => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(t => t.stop());
+                stopRecordBtn.disabled = true;
+            }
+        };
+
+        function createSource(buffer, volumePercent) {
+            const src = audioContext.createBufferSource();
+            src.buffer = buffer;
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = volumePercent / 100;
+            src.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            return { src, gainNode };
+        }
+
+        playBtn.onclick = async () => {
+            if (!originalBuffer) return;
+            stopAllSources();
+            if (!audioContext) audioContext = new AudioContext();
+            const ratio = getRatio();
+            statusDiv.textContent = 'Generando armonía...';
+            try {
+                const harmonyBuffer = await pitchShift(originalBuffer, ratio);
+                statusDiv.textContent = 'Reproduciendo dúo...';
+                const orig = createSource(originalBuffer, volOriginal.value);
+                const harm = createSource(harmonyBuffer, volHarmony.value);
+                activeSources.push(orig.src, harm.src);
+                orig.src.start(0);
+                harm.src.start(0);
+                orig.src.onended = () => { if (activeSources.length === 0) statusDiv.textContent = 'Terminado.'; };
+            } catch (e) {
+                errorMsg.textContent = 'Error en el procesamiento: ' + e.message;
+                statusDiv.textContent = 'Error.';
+            }
+        };
+
+        playHarmonyOnlyBtn.onclick = async () => {
+            if (!originalBuffer) return;
+            stopAllSources();
+            if (!audioContext) audioContext = new AudioContext();
+            const ratio = getRatio();
+            statusDiv.textContent = 'Generando armonía...';
+            try {
+                const harmonyBuffer = await pitchShift(originalBuffer, ratio);
+                statusDiv.textContent = 'Reproduciendo solo armonía...';
+                const harm = createSource(harmonyBuffer, volHarmony.value);
+                activeSources.push(harm.src);
+                harm.src.start(0);
+                harm.src.onended = () => statusDiv.textContent = 'Terminado.';
+            } catch (e) {
+                errorMsg.textContent = 'Error: ' + e.message;
+            }
+        };
+
+        stopAllBtn.onclick = stopAll;
+
+        document.body.addEventListener('touchstart', () => {
+            if (!audioContext) audioContext = new AudioContext();
+        }, { once: true });
+    </script>
+</body>
+</html>
